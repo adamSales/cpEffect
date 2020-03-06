@@ -1,0 +1,628 @@
+% THIS IS SIGPROC-SP.TEX - VERSION 3.1
+% WORKS WITH V3.2SP OF ACM_PROC_ARTICLE-SP.CLS
+% APRIL 2009
+%
+% It is an example file showing how to use the 'acm_proc_article-sp.cls' V3.2SP
+% LaTeX2e document class file for Conference Proceedings submissions.
+% ----------------------------------------------------------------------------------------------------------------
+% This .tex file (and associated .cls V3.2SP) *DOES NOT* produce:
+%       1) The Permission Statement
+%       2) The Conference (location) Info information
+%       3) The Copyright Line with ACM data
+%       4) Page numbering
+% ---------------------------------------------------------------------------------------------------------------
+% It is an example which *does* use the .bib file (from which the .bbl file
+% is produced).
+% REMEMBER HOWEVER: After having produced the .bbl file,
+% and prior to final submission,
+% you need to 'insert'  your .bbl file into your source .tex file so as to provide
+% ONE 'self-contained' source file.
+%
+% Questions regarding SIGS should be sent to
+% Adrienne Griscti ---> griscti@acm.org
+%
+% Questions/suggestions regarding the guidelines, .tex and .cls files, etc. to
+% Gerald Murray ---> murray@hq.acm.org
+%
+% For tracking purposes - this is V3.1SP - APRIL 2009
+
+\documentclass{edm_template}
+
+\usepackage{bm}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{tikz}
+%\usepackage{xcolor}
+
+<<init,include=FALSE>>=
+library(knitr)
+opts_chunk$set(
+echo=FALSE,results='asis',warning = FALSE,message = FALSE,cache=TRUE,error = FALSE
+)
+pn <- function(...) prettyNum(...,big.mark=',')
+# library(xtable)
+# library(lme4)
+# library(tidyverse)
+# library(arm)
+# library(RItools)
+# library(optmatch)
+# library(estimatr)
+# library(lmerTest)
+# select <- dplyr::select
+
+# `%nin%` <- Hmisc::`%nin%`
+
+@
+
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+\newcommand\independent{\protect\mathpalette{\protect\independenT}{\perp}}
+
+
+<<loadResults,include=FALSE,cache=FALSE>>=
+load('artifacts/dataAnalysis.RData')
+@
+
+
+\begin{document}
+
+\title{The effect of teachers reassigning students to new Cognitive Tutor sections}
+%\subtitle{[Extended Abstract]
+%\titlenote{A full version of this paper is available as
+%\textit{Author's Guide to Preparing ACM SIG Proceedings Using
+%\LaTeX$2_\epsilon$\ and BibTeX} at
+%\texttt{www.acm.org/eaddress.htm}}}
+%
+% You need the command \numberofauthors to handle the 'placement
+% and alignment' of the authors beneath the title.
+%
+% For aesthetic reasons, we recommend 'three authors at a time'
+% i.e. three 'name/affiliation blocks' be placed beneath the title.
+%
+% NOTE: You are NOT restricted in how many 'rows' of
+% "name/affiliations" may appear. We just ask that you restrict
+% the number of 'columns' to three.
+%
+% Because of the available 'opening page real-estate'
+% we ask you to refrain from putting more than six authors
+% (two rows with three columns) beneath the article title.
+% More than six makes the first-page appear very cluttered indeed.
+%
+% Use the \alignauthor commands to handle the names
+% and affiliations for an 'aesthetic maximum' of six authors.
+% Add names, affiliations, addresses for
+% the seventh etc. author(s) as the argument for the
+% \additionalauthors command.
+% These 'additional authors' will be output/set for you
+% without further effort on your part as the last section in
+% the body of your article BEFORE References or any Appendices.
+
+\numberofauthors{2} %  in this sample file, there are a *total*
+% of EIGHT authors. SIX appear on the 'first-page' (for formatting
+% reasons) and the remaining two appear in the \additionalauthors section.
+%
+\author{
+% You can go ahead and credit any number of authors here,
+% e.g. one 'row of three' or two rows (consisting of one row of three
+% and a second row of one, two or three).
+%
+% The command \alignauthor (no curly braces needed) should
+% precede each author name, affiliation/snail-mail address and
+% e-mail address. Additionally, tag each line of
+% affiliation/address with \affaddr, and tag the
+% e-mail address with \email.
+%
+% 1st. author
+\alignauthor
+Adam C Sales\\
+       \affaddr{University of Texas College of Education}\\
+       \affaddr{Austin, TX, USA}\\
+       \email{asales@utexas.edu}
+% 2nd. author
+\alignauthor
+John F Pane\\
+       \affaddr{RAND Corporation}\\
+       \affaddr{Pittsburgh, PA, USA}\\
+       \email{jpane@rand.org}
+}
+% Just remember to make sure that the TOTAL number of authors
+% is the number that will appear on the first page PLUS the
+% number that will appear in the \additionalauthors section.
+
+\maketitle
+\begin{abstract}
+The design of the Cognitive Tutor Algebra I (CTA1) intelligent tutoring system assumes that students work through sections of material following a pre-specified order, and only move on from one section to the next after mastering the first section’s skills. However, the software gives teachers the ability to override that structure, by reassigning students to different sections of the curriculum. Which students get reassigned? Does reassignment hurt student learning? Does it help? This paper used data from the treatment arm of a large effectiveness study of the CTA1 curriculum to estimate the effects of reassignment on students’ scores on an Algebra I posttest. Since reassignment is not randomized, we used a multilevel propensity score matching design, along with assessments of sensitivity to bias from unmeasured confounding, to estimate the effects of reassignment. We found that reassignment reduces posttest scores by roughly 0.15 standard deviations—about three-quarters of the overall CTA1 treatment effect—that unmeasured confounding is unlikely to completely explain this observed effect, but that the effect of reassignment may vary widely between classrooms.
+\end{abstract}
+
+%% A category with the (minimum) three required fields
+%\category{H.4}{Information Systems Applications}{Miscellaneous}
+%%A category including the fourth, optional field follows...
+%\category{D.2.8}{Software Engineering}{Metrics}[complexity measures, performance measures]
+%
+%\terms{Theory}
+
+
+\section{Introduction}
+\section{The Cognitive Tutor, Mastery Learning and Reassignment}\label{sec:background}
+\section{Data: the RAND CTA1 Effectiveness Study}\label{sec:data}
+In the years 2007--2010, the RAND Corporation conducted a randomized
+study to test the effectiveness of the CTA1 curriculum relative to
+business as usual.
+The study tested CTA1 under authentic, natural conditions---that is,
+oversight and support of CTA1's use was the same as it would have been
+outside of an RCT.
+The study population consisted of over 25,000 students in 73 high schools and 74 middle
+schools located in 52 diverse school districts in seven states.
+Students in Algebra I classrooms in participating schools took an algebra I
+pretest and a posttest, both from the CTB/McGraw-Hill Acuity series.
+The pretest was the Algebra Readiness Exam, a 40-item multiple-choice
+exam testing students' algebra I prerequisite skills.
+The posttest was the Algebra Proficiency Exam, a 32-item
+multiple-choice exam testing algebra I skills including solving
+equations for an unknown, graphing linear and quadratic functions,
+calculating complex algebraic expressions and other skills.
+Data from both exams were scored with a three-parameter item
+response theory (IRT) model.
+
+Results \cite{pane2014effectiveness} were reported separately for
+middle and high schools, in the first and second years of
+implementation.
+In the first year, estimated effects were close to zero in middle
+schools and slightly negative in high schools, with confidence
+intervals including negative, null, and positive effects in both
+cases.
+In the second year, estimated effects were positive---roughly one fifth of a
+standard deviation---in both middle and high schools, and were
+statistically significant in high schools.
+In the high school sample, the difference between the effects in the
+first and second years was statistically significant as well.
+
+As part of the study, RAND collected basic demographic data from
+students, including gender, race/ethnicity, prior standardized test
+scores, and special education, free or reduced-price lunch, and
+English language learner status.
+
+Carnegie Learning collected computer log data from most users in the
+treatment arm of the study.
+At the problem level, this dataset records which problems students
+attempted, along with timestamps and the numbers of hints and errors
+for each attempted problem.
+The dataset also contains data on which sections of CTA1 students
+attempted, and the result: whether the student mastered the section,
+was promoted automatically without mastery, was reassigned by the
+teacher to a new section, or stopped using the tutor altogether midway
+through the section.
+
+The current study analyzes data from the high school treatment group only,
+assessing the effect of teachers reassigning students from one CTA1
+section to another.
+Since students in the control arm of the study did not have access to
+the tutor, section reassignment is not relevant for them.
+We focus on high school, as opposed to middle school, since the
+characteristics of Algebra I students tend to differ between the two
+levels: 8th-grade students only take Algebra I if they are
+sufficiently advanced, whereas most 9th grade students (who have not
+taken it already) take Algebra I regardless.
+Thus, the high school sample was not only larger but also more broadly
+representative than middle school sample.
+
+<<include=FALSE,cache=FALSE>>=
+attach(dataInfo)
+@
+
+Unfortunately, log data was not available for every student in the
+treatment arm of the study, primarily for two reasons: some students
+in CTA1 schools nevertheless did not use the tutor, and some students
+used the tutor but their log data was irretreavable or could not be
+reliably linked to posttest scores and covariates.
+This study omitted schools in which data was missing for over 20\% of
+students in either year, leaving \Sexpr{pn(nschool)} schools.
+Among the students at these schools, we omitted 164 had no log data, and 242
+either only worked---but did not complete---one section or had no
+section completion data for some other reason.
+A total of \Sexpr{pn(nstud)} students in \Sexpr{pn(nclass)} classrooms
+remained in the analysis sample, roughly \Sexpr{percentKept}\% of the
+full treatment group.
+
+\input{tables/ncp}
+
+Table \ref{tab:ncp} shows the number of included students in each year of the
+experiment who were reassigned zero, one, two, three, or four or more times.
+Since the sample size decreases quickly with the number of
+reassignments, and for the sake of simplicity, we chose to dichotomize
+reassignment, estimating the effect of being reassigned at least once
+versus never.
+
+
+
+\section{Statistical Approach}\label{sec:psm}
+For subjects $i=1,\dots,N$ in the treatment arm of the CTA1 trial, let
+$Y_i$ denote subject $i$'s posttest score, and let $Z_i\in \{0,1\}$
+indicate whether $i$ was ever reassigned.
+Following \cite{neyman} and \cite{rubin}, let $y_i^0$ and $y^1_i$ denote $i$'s
+posttest score were $Z_i=0$ or $1$---i.e., had $i$ not been
+reassigned, or had $i$ been reassigned, perhaps counterfactually---and
+let $\tau_i=y_i^1-y_i^0$ be the effect of reassignment on $i$'s
+posttest score.
+Since $y_i^1$ and $y_i^0$ are never simultaneously observed, $\tau_i$
+is unidentified; however, weighted average treatment effects of the form
+$\tau^w=\sum_i w_i \tau_i$, with $w_i\ge 0$ and $\sum_iw_i=1$ may be
+identified under the right causal assumptions.
+For instance, had $Z$ been randomized, the average treatment effect,
+$\tau^w$ with $w_i=1/N$, could be estimated without bias by the
+difference in the mean of $Y$ between subjects with $Z=1$ and with
+$Z=0$.
+Of course, reassignment $Z$ was not random, so identifying average
+treatment effects requires some combination of control for observed
+covariates and assumptions about unobserved covariates.
+
+Let $\bm{x}_i$ denote a vector of covariates for subject $i$.
+These include pretest scores, special education, gifted, and English
+language learner (ELL) status,
+race/ethnicity (white, black, Latinx\footnote{For the sake of
+  parsimony, these categories were
+  collapsed from a larger set in the original dataset, so that
+  \Sexpr{nInd} American Indian/Alaskan Native students were
+  catagorized as Latinx, \Sexpr{nAsn} Asian/Pacific Islander students
+  and \Sexpr{nRaceNA} students with missing data were categorized as white, and \Sexpr{nOth} Other/Multiracial
+  students were categorized as black.}),
+received free or reduced-price lunch (FRL).
+Let $Class_i$ be $i$'s classroom; since reassignment occured within
+classrooms, $Class$ is a covariate as well.
+If reassignment were randomly assigned, the (theoretical) distribution
+of $\bm{x}$ and $Class$
+would be equal between reassigned and not-reassigned
+students---$\bm{x}$ and $Class$ would be balanced.
+Our strategy will be to construct a randomization scheme in which
+$\bm{x}$, and, to the extent possible, $Class$ are balanced, and
+conduct inference under that randomization scheme.
+
+Specifically, we use propensity score matching \cite{rosenbaum2002observational} \cite{rebar}.
+The propensity score for subject $i$, $e_i(\bm{x}_i,Class_i)=Pr(Z_i=1|\bm{x}_i,Class_i)$ is the probability of $i$ being reassigned conditional on covariates $\bm{x}$ and classroom.
+\cite{rosenbaum1983central} showed that under two conditions, described below, estimates of the average treatment effect conditional on $e(\bm{x},Class)$ are unbiased.
+To estimate effects, we first estimate propensity scores (Section \ref{sec:propensityScores}), then identify groups of reassigned and not-reassigned students with similar estimated propensity scores---a ``match''---and verify that covariates are sufficiently balanced within the matched sample (Section \ref{sec:match}), and, finally, estimate effects within the matched sample \ref{sec:effects}.
+
+The first condition for propensity score matching is that there is some randomness in the treatment assignment:
+\begin{equation}\label{eq:commonSupport}
+0<e_i(\bm{x}_i,Class_i)<1 \text{ for all }i.
+\end{equation}
+When \eqref{eq:commonSupport} fails for a subset of the analysis sample, common practice is to drop that subset and estimate average effects for the remainder of the analysis sample, i.e. the subset for which \eqref{eq:commonSupport} holds; this subset is referred to as the ``region of common support" \cite{caliendo2008some} \cite{shadish2010primer}.
+In this study, including $Class$ among the covariates leads to violations of \eqref{eq:commonSupport}.
+Of the \Sexpr{nclassTot}
+classrooms over the two years of the study, \Sexpr{nclass0} contained no
+reassigned students, and in \Sexpr{nclass1} classrooms every student
+was reassigned at least once.
+In this subset of the data, including \Sexpr{round(pstud10*100)}\% of
+students, $Pr(Z=1|Class)=0$ or 1.
+Our solution is to analyze the data in two parts.
+In the first part, we drop classrooms in which no one or everyone was reassigned, and only estimate effects for students in classrooms with some reassignment variance, a student-level analysis.
+In the second part, we conduct a classroom-level analysis.
+For for classrooms $j=1,...,J$, let $\bar{Z}_j=1$ if everyone in classroom $j$ was reassigned and $\bar{Z}=0$ if no one was reassigned.
+Then we estimate propensity scores $e(\bm{\bar{x}}_j)=Pr(\bar{Z}=1|\bm{\bar{Z}})$, where $\bm{\bar{x}}$ is a vector of covariates aggregated to the classroom level, and match $\bar{Z}=1$ classrooms to $\bar{Z}=0$ classrooms with similar propensity scores.
+Finally, we estimate effects for these classrooms by modeling $Z$ as assigned at the classroom level, as in a group randomized trial.
+We will present the student-level and classroom-level effect estimates separately as well as in a combined model.
+
+The second condition for propensity score matching is that there are no unmeasured confounders:
+\begin{equation}\label{eq:ignore1}
+(y^1,y^0)\independent Z|\bm{x},Class
+\end{equation}
+for the student-level analysis and
+\begin{equation*}
+(y^1,y^0)\independent \bar{Z}|\bm{\bar{x}}
+\end{equation*}
+for the classroom-level analysis.
+Assumption \eqref{eq:ignore1} is well known as the achilles heel of causal inference outside of RCTs.
+\eqref{eq:ignore1} is untestable; its believability depends on what is understood about the process that underlies treatment assignment $Z$, and what covariates are available for control.
+In our case, reassignment is poorly understood, and appears highly idiosyncratic \cite{descriptivePaper}.
+Fortunately, our study includes a pretest measure, and observational studies controlling for pretest scores tend to perform well, and repilicate experimental estimates \cite{cook2008three} \cite{cook2009bias}.
+Section \ref{sec:sensitivity} discusses a sensitivity analysis that
+relaxes \label{eq:ignore1} and assumes reasonable levels of unmeasured
+confounding.
+
+Our attitude towards propensity score matching is agnostic.
+If the propensity score models in the following section were
+approximately corrrect, and yielded good estimates of the true
+propensity scores, then the theory underlying propensity score
+adjustment holds.
+If not, the process of propensity score matching may still result in a
+set of matched reassigned and not reassigned students that, on
+average, resemble each other on all measured covariates.
+In other words, the (mis)estimated propensity scores $\hat{e}$ may still be
+approximate ``balancing'' scores, satisfying
+\begin{equation}\label{eq:balancing}
+\bm{x}\independent Z|\hat{e}.
+\end{equation}
+Causal inference based on comparisons within these matched sets will
+still be plausible; indeed, \cite{rosenbaum1983central} showed that in order to estimate
+average treatment effects, it is sufficient to condition on a
+balancing score, rather than the propensity score itself.
+
+Following that logic, we choose propensity score models, and matching
+schemes based on the fitted models, in order to satisfy
+\eqref{eq:balancing}.
+Since posttest scores play no role in propensity score estimation and
+matching, the process may be iterative without affecting the
+objectivity of the final causal estimate.
+That is, we may try a series of candidate propensity score models and
+matches, and choose the one that results in the best covariate
+balance.
+Only then do posttests enter the picture, so that we may estimate
+effects.
+
+All data analysis was done in \texttt{R} \cite{rcite} using the
+\texttt{tidyverse} suite of packages \cite{tidyverse} for data
+manipuation, plotting, and other tasks.
+This document was produced dynamically with \texttt{knitr}
+\cite{knitr}.
+Source code is available at \url{www.github.com/adamSales/cpEffect}.
+
+\section{Propensity Scores: Who Gets Reassigned?}\label{sec:propensityScores}
+\subsection{Student-Level}
+We use multilevel logistic regression \cite{gelmanHill} to estimate student level propensity scores.
+The multilevel regression accounts for the nesting of students within classrooms, classrooms within teachers, and teachers within schools.
+In constructing the model, we give special consideration to the role of pretest scores, a proxy for student mathematical ability at the beginning of the school year, in predicting reassignment.
+First, we decompose pretest scores into student- and classroom-level components.
+If $w_i$ is student $i$'s pretest score, let $w_i=\bar{w}_{j[i]}+\tilde{w}_i$, where $\bar{w}_{j[i]}$ is the average pretest score in $i$'s classroom $j[i]$, and $\tilde{w}_i$ is the difference between $i$'s pretest score and the classroom mean.
+This decomposition was motivated by the possibility that reassignment patterns may differ between high- and low-achieving classrooms, and that a teacher's decision to reassign a student depends on the student's ability relative to the classroom than his or her absolute ability.
+Second, we modeled the effect of $\tilde{w}$ on $Z$ as linear in the logit scale, but allowed the slope to vary by classroom.
+This was motivated by the possibilty that some teachers use reassignment to help struggling students catch up to their peers, so lower $\tilde{w}$ would predict $Z$, and other teachers use it to help high-achievers skip sections related to basic skills, so higher $\tilde{w}$ would predict $Z$.
+We also considered models incorporating non-linear effects of
+$\tilde{w}$, via natural splines \cite{hastie2017generalized} but
+found no evidence that the non-lineararity improved the model fit.
+We fit the model using the \texttt{lme4} package in \texttt{R}
+\cite{lme4} \cite{rcite}.
+
+All in all, the propensity score model was:
+\begin{equation}\label{eq:propmod1}
+\begin{split}
+Pr(&Z_i=1|\bm{x}_i,Class_i=j)=\\
+&logit^{-1}( \beta_{0state[i]}+beta_{1j[i]} \tilde{w}_i+\beta_2 \bar{w}_{j[i]}+\\
+&\beta_3 Black_i+\beta_4 Latinx_i+\beta_5 Male_i+\\
+&\beta_6 Freshman_i+\beta_7 SpEd_i+\beta_8 gifted_i+\\
+&\beta_9 ESL_i+\beta_{10} FRL_i+\beta_{11} FRLmis_i+\\
+&\beta_{12}year_i+\epsilon^{Cls}_{j[i]}+\epsilon^{Teach}_{k[i]}+\epsilon^{Schl}_{l[i]})
+\end{split}
+\end{equation}
+where $logit^{-1}(x)=e^x/(1+e^x)$ is the inverse logit function, $\beta_{0state[i]}$ is a (fixed) intercept for each state in the sample, $\beta_{1j[i]}$ is a random slope for $\tilde{w}_i$, varying by classroom $j$, $FRLmis_i$ is an indicator for missing data in $FRL$ (which was mode-imputed), $year_i=1,2$ is the study year for subject $i$, $\epsilon^{Cls}_{j[i]}$, $\epsilon^{Teach}_{k[i]}$, and $\epsilon^{Schl}_{l[i]}$ are random intercepts for classroom $j$, teacher $k$, and school $l$.
+The random intercepts were all modeled as normal with a mean of zero and a standard deviation estimated from the data. The random slope $\beta_{1j[i]}$ was modeled as normal with a mean and standard deviation estimated from the data. $\beta{1j}$ and $\epsilon^{Cls}_j$ were allowed to correlate, while other random effects were modeled as independent.
+
+\begin{figure}
+<<coefplot1,out.width="95%">>=
+
+pdat <- psmodSumm$coef%>%
+  as.data.frame()%>%
+  rownames_to_column('Covariate')%>%
+  filter(Covariate%in%c('pretestC','mpretest','raceBlack','raceHispanic','sexM','grade9','spec_speced', 'spec_gifted','spec_esl','frl','frlMISTRUE','year'))%>%
+  mutate(
+    Covariate= map_chr(Covariate,
+      ~switch(.,
+        mpretest='wbar',#"$\\bar{w}$",
+        pretestC='wtilde',#"$\\tilde{w}$",
+        raceWhite='White',
+        raceBlack='Black',
+        raceHispanic='Latinx',
+        sexF='F',
+        sexM='Male',
+        "grade10+"="10+",
+        grade9="Freshman",
+        spec_speced="Special Ed.",
+        spec_gifted="Gifted",
+        spec_esl="ESL",
+        frl="FRL",
+        frlMISTRUE="FRL Missing",
+        year="Year")
+    ),
+    Covariate=factor(Covariate,levels=rev(unique(Covariate))),
+    ymax=Estimate+2*`Std. Error`,
+    ymin=Estimate-2*`Std. Error`
+  )
+
+ggplot(pdat,aes(Covariate,Estimate,ymin=ymin,ymax=ymax))+
+      geom_point(size=3)+
+          xlab(NULL)+ylab(NULL)+
+  geom_errorbar(width=0,size=2)+geom_hline(yintercept=0)+
+  scale_x_discrete(labels=c(levels(pdat$Covariate)[1:(nlevels(pdat$Covariate)-2)],bquote(bar(w)),bquote(tilde(w))))+
+  theme(text = element_text(size=25))+
+  coord_flip()
+
+@
+%\input{plots/coefplot1.tex}
+\caption{Estimated coefficients and 95\% confidence intervals for
+  student and class-level covariates from model \eqref{eq:propmod1}.}
+\label{fig:propmod1}
+\end{figure}
+
+Figure \ref{fig:propmod1} gives estimated coefficients and 95\%
+confidence intervals for the propensity score model
+\eqref{eq:propmod1}.
+Reassignment was much more prevalent in the second year of
+implementation than in the first, and classrooms with low average
+pretest scores reassigned students more often---though the magnitude
+of this trend is hard to determine, ranging from moderate to very
+large (the coefficients for $\bar{w}$ and $\tilde{w}$ were scaled by the
+standard deviations of these variables in the data).
+Latinx students were reassigned more often than their White
+classmates.
+
+Students with lower pretest scores were reassigned more frequently
+than their classmates with higher scores.
+However, this may vary by classroom.
+On average, classroom-specific $\beta_{1j}$ was approximately
+\Sexpr{round(psmodSumm[['coef']]['pretestC',1],2)} standard
+deviations, but the 95\% confidence interval for the mean includes
+slightly positive values as well.
+The standard deviation of $\beta_{1j}$, varying by classroom, was
+estimated as \Sexpr{round(sdSlope,2)}, suggesting that in some
+classrooms the slope on $\tilde{w}$ was moderately positive, and in
+others it was negative.
+However, the model was not able to estimate the variance of
+$\beta_{1j}$ precisely; the p-value testing the null hypothesis of
+zero variance was \Sexpr{round(sdSlopep,2)}.\footnote{This hypothesis
+  was tested with a likelihood ratio $\chi^2$ test comparing
+  \eqref{eq:propmod1} to a model in which $\beta_1$ did not vary by
+  classroom.}
+When model \eqref{eq:propmod1} was modified so that $\beta_1$ was not
+allowed to vary by classroom, it was estimated as \Sexpr{beta1.0}.
+
+\subsection{Classroom-Level}
+Using data from classrooms in which either all students or no students
+were reassigned, we estimated classroom-level propensity scores
+$Pr(\bar{Z}=1|\bm{\bar{x}})$.
+To do so, we used a single-level logistic regression model:
+\begin{equation}\label{eq:propmod2}
+\begin{split}
+Pr(&\bar{Z}_j=1|\bm{\bar{x}}_j)=\\
+&logit^{-1}( \gamma_{0state[j]}+\gamma_1 \bar{w}_{j}+\\
+&\gamma_2 \%Freshman_j+\gamma_{3} \%FRL_j+\\
+&\gamma_{4}year_j+\gamma_5Nstud_j)
+\end{split}
+\end{equation}
+where $\%Freshman_j$ and $\% FRL_j$ denote the percentages of
+classroom $j$ that are 9th graders or receive free or reduced-price
+lunches, and $Nstud_j$ is the number of students in classroom $j$ in
+our dataset.
+Model \eqref{eq:propmod2} was simpler than the student-level version,
+\eqref{eq:propmod1}, both because it used classroom-aggregated data,
+and because the sample size was smaller ($n=\Sexpr{nclass1+nclass0}$
+classrooms versus $n=nStud1$ students), requiring greater parsimony.
+As described in Section \ref{sec:psm}, model \eqref{eq:propmod2} was
+selected in order to acheive covariate balance \eqref{eq:balance}.
+
+\begin{figure}\label{fig:coefplot2}
+<<coefplot2,fig.width=3,fig.height=2>>=
+
+pdat2 <- psmod2coef%>%
+  as.data.frame()%>%
+  rownames_to_column('Covariate')%>%
+  filter(Covariate%in%c('nstud','mpretest','raceBlack','raceHispanic','sexM','grade9','spec_speced', 'spec_gifted','spec_esl','frl','frlMISTRUE','year'))%>%
+  mutate(
+    Covariate= map_chr(Covariate,
+      ~switch(.,
+        mpretest='wbar',#"$\\bar{w}$",
+        pretestC='wtilde',#"$\\tilde{w}$",
+        raceWhite='White',
+        raceBlack='Black',
+        raceHispanic='Latinx',
+        sexF='F',
+        sexM='Male',
+        "grade10+"="10+",
+        grade9="%Freshman",
+        spec_speced="Special Ed.",
+        spec_gifted="Gifted",
+        spec_esl="ESL",
+        frl="%FRL",
+        frlMISTRUE="FRL Missing",
+        year="Year",
+        nstud="Nstud")
+    ),
+    Covariate=factor(Covariate,levels=rev(unique(Covariate))),
+    ymax=Estimate+2*`Std. Error`,
+    ymin=Estimate-2*`Std. Error`
+  )
+
+ggplot(pdat2,aes(Covariate,Estimate,ymin=ymin,ymax=ymax))+
+      geom_point(size=3)+
+          xlab(NULL)+ylab(NULL)+
+  geom_errorbar(width=0,size=2)+geom_hline(yintercept=0)+
+  scale_x_discrete(labels=c(levels(pdat2$Covariate)[1:(nlevels(pdat2$Covariate)-1)],bquote(bar(w))))+
+  theme(text = element_text(size=10))+
+  coord_flip()
+
+@
+\caption{Estimated coefficients and 95\% confidence intervals from
+  model \eqref{eq:propmod2}.}
+\label{fig:propmodel2}
+\end{figure}
+
+Figure \ref{fig:propmodel2} shows estimates and 95\% confidence
+intervals for covariate coefficients from \eqref{eq:propmodel2}.
+Similar to the results from the student-level analysis, reassignment
+is more prevalent in classrooms with lower average pretest scores and
+in the second year of implementation, though \eqref{eq:propmodel2}
+cannot rule out null, or very small opposite-signed effects in either case.
+Teachers in classrooms with a greater proportion of FRL students were less likely
+to use reassignment.
+
+
+% \begin{figure}
+% <<psSlopes,out.width="95%",dev='tikz',dev.args=list(pointsize=200)>>=
+% ggplot(slopeDat)+geom_abline(aes(slope=b1,intercept=b0,group=id,color=what))+coord_cartesian(xlim=c(xmin,xmax),ylim=yrange,expand=FALSE)+labs(x="$\\tilde{w}$",y="Log Odds of Reassignment",color=NULL)+theme(legend.position='top')
+% @
+% \end{figure}
+
+
+
+\section{Matching and Covariate Balance}
+\subsection{Student Level Match}\label{sec:match}
+We construct a student-level match based on propensity scores on the
+log-odds scale, i.e. $log(\hat{e}/(1-\hat{e})$.
+Instead of a pair-matching design, which would necessitate discarding
+non-reassigned students who would make good matched comparisons, we
+use a restricted full match design \cite{hansen2004}.
+In this design, the numbers of reassigned and not-reassigned students
+in each matched set is allowed to vary, so that in some cases several
+reassigned students may be matched with a single non-reassigned
+studnet, and vice-versa.
+We use the \texttt{R} package \texttt{optmatch} \cite{optmatch} to
+choose the matched sets optimally.
+The \texttt{fullmatch()} routine takes a matrix of discrepencies
+(e.g. differences in propensity scores) between treatment and control
+subjects, and arranges them into matched sets so that the sum of
+absolute discrepencies between matched subjects is minimized.
+
+As described at the end of Section \ref{sec:psm}, the post-test scores
+played no role in this process.
+Hence, we were able to iteratively match students, check covariate
+balance, modify the propensity score model and/or the matching routine
+if necessary, and repeat until adaquate balance was achieved.
+Here we present the final match; a record of attempts is available on
+the first author's github site.
+
+
+\input{tables/balance1.tex}
+\subsection{Classroom Level Match}
+\subsection{Effect Estimates}
+\section{The Effect of Reassignment}\label{sec:effects}
+\section{What About Unobserved Confounders?}\label{sec:sensitivity}
+\section{Treatment Effect Heterogeneity}\label{sec:heterogeneity}
+\section{Discussion}\label{sec:discussion}
+
+
+<<include=FALSE,cache=FALSE>>=
+detach(dataInfo)
+@
+\section{Acknowledasdfasdfgments}
+This section is optional; it is a location for you
+to acknowledge grants, funding, editing assistance and
+what have you.  In the present case, for example, the
+authors would like to thank Gerald Murray of ACM for
+his help in codifying this \textit{Author's Guide}
+and the \textbf{.cls} and \textbf{.tex} files that it describes.
+
+\section{References}
+%
+% The following two commands are all you need in the
+% initial runs of your .tex file to
+% produce the bibliography for the citations in your paper.
+\bibliographystyle{abbrv}
+\bibliography{ct}  % sigproc.bib is the name of the Bibliography in this case
+% You must have a proper ".bib" file
+%  and remember to run:
+% latex bibtex latex latex
+% to resolve all references
+%
+% ACM needs 'a single self-contained file'!
+%
+%APPENDICES are optional
+%\balancecolumns
+\end{document}
