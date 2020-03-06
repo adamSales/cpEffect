@@ -1,0 +1,6 @@
+library(devtools)
+#dev_mode()
+library(RItools)
+#dev_mode()
+ddd <- data.frame(Z=rep(c(1,0),50),x1=rnorm(100),x2=rnorm(100),ss=factor(rep(1:50,each=2)))
+balanceTest(Z~x1+x2+strata(ss),data=ddd)
