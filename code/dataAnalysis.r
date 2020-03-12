@@ -284,7 +284,7 @@ mod4 <- lm_robust(y_yirt~everCP+splines::ns(xirt,5)+race+sex+grade+spec_speced+s
 
 
 ## sensitivity analysis
-source('~/Box Sync/rcode/hhh.r')
+source('code/hhh.r')
 
 X <- as.data.frame(model.matrix(psmod1)[,-1])
 X <- X[,-grep('pretest',names(X))]
