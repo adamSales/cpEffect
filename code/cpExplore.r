@@ -88,6 +88,20 @@ mean(abs(br$binned[,'ybar'])<=br$binned[,'2se'])
 pscore1 <- predict(psmod1,type='link')
 boxplot(pscore1~psmod1@frame$everCP)
 
+match0 <- fullmatch(everCP~pscore1,data=cpDat1)
+
+bal0 <- xBalance(everCP~xirt+pretestC+classid2+race+sex+grade+spec_speced+spec_gifted+spec_esl+frl+frlMIS+year+teachid2+schoolid2+state,data=cpDat1,report=c("std.diffs","z.scores","chisquare.test"),strata=list(`Before Match`=NULL,`After Match`=~match0))
+bal0$overall
+
+print(bal0covs <- xBalance(everCP~xirt+pretestC+race+sex+grade+spec_speced+spec_gifted+spec_esl+frl+frlMIS+year,data=cpDat1,report=c("std.diffs","z.scores","chisquare.test"),strata=list(`Before Match`=NULL,`After Match`=~match0)))
+bal0covs$overall
+
+opar <- par()
+plot(bal0covs,colors=subwayPalette[1:2])
+abline(v=c(-0.25,-0.05,0.05,0.25),lty=2)
+do.call("par",opar)
+
+
 dist1 <- match_on(everCP~pscore1,caliper=0.2,data=cpDat1)
 
 match1 <- fullmatch(dist1,data=cpDat1)
@@ -327,7 +341,7 @@ psmodClass1 <- glmer(everCP~mpretest+grade9+frl+year+nstud+(1|teachid2)+(1|schoo
 psmodClass2 <- arm::bayesglm(everCP~mpretest+grade9+frl+year+nstud+state,family=binomial,data=cpDatClass)
 
 psmodClass3 <- glm(everCP~mpretest+grade9+frl+year+nstud+state,family=binomial,data=cpDatClass)
-
+psmodClass4 <- glm(everCP~mpretest+race+sex+grade+spec_speced+spec_gifted+spec_esl+frl+frlMIS+year,family=binomial,data=cpDatClass)
 
 source('~/Box Sync/rcode/matchingFunctions.r')
 
@@ -339,17 +353,19 @@ plotPS(psmodClass3)
 par(mfrow=c(1,1))
 summary(cpDatClass$m2 <- fullmatch(psmodClass3,data=cpDatClass))
 
-plotMatch(cpDatClass$m2,psmodClass2)#,Zfuzz=scorePlot)
+plotMatch(cpDatClass$m2,psmodClass3)#,Zfuzz=scorePlot)
 
 distC2 <- match_on(psmodClass3,caliper=0.3)
 summary(cpDatClass$m3 <- fullmatch(distC2,data=cpDatClass))
 
+cpDatClass$m4 <- fullmatch(psmodClass4,caliper=0.2)
+
 plotMatch(cpDatClass$m3,psmodClass2,Zfuzz=scorePlot)
 
-cpDat2 <- full_join(cpDat2,tibble(classid2=cpDatClass$classid2,match1=cpDatClass$m2,match2=cpDatClass$m3))
+balDat <- full_join(cpDat2,tibble(classid2=cpDatClass$classid2,match1=cpDatClass$m2))
 
-balClass2 <- balanceTest(everCP~mpretest+race+sex+grade+spec_speced+spec_gifted+spec_esl+frl+frlMIS+year+state+cluster(classid2)+strata(match1)+strata(match2),data=cpDat2,report=c("std.diffs","z.scores","chisquare.test"))
-
+balClass2 <- balanceTest(everCP~mpretest+race+sex+grade+spec_speced+spec_gifted+spec_esl+frl+frlMIS+year+cluster(classid2)+strata(match1),data=balDat,report=c("std.diffs","z.scores","chisquare.test"))
+plot(balClass2,colors=subwayPalette[1:2])+geom_vline(xintercept=c(-0.25,0.25,-0.05,0.05),linetype='dotted')
 ## pload('../data/RANDstudyData/HSdata.RData')
 
 ## dat$classid2 <- as.character(dat$classid2)
