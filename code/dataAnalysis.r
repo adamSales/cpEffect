@@ -11,6 +11,7 @@ library(kableExtra)
 library(coefplot)
 library(tikzDevice)
 
+
 #dev_mode()
 library(RItools)
 #dev_mode()
@@ -349,8 +350,8 @@ xtable(matchTEtab,caption='Estimates of the effect of reassignment without contr
 ### heterogeneity
 #######################
 
-## mod1re <- lmer(y_yirt ~ everCP + splines::ns(xirt, 5) + spec_speced + frlMIS +
-##                  race+match+(everCP|classid2),data=cpDat1,REML=FALSE)
+mod1re <- lmer(y_yirt ~ everCP + splines::ns(xirt, 5) + spec_speced + frlMIS +
+                race+match+(everCP|classid2),data=cpDat1,REML=FALSE)
 ## coefTab <- summary(mod1re)$coef
 ## mod0re <- update(mod1re,.~.-(everCP|classid2)+(1|classid2))
 ## save(mod1re,mod0re,coefTab,file='artifacts/heterogeneityModel.RData')
@@ -376,7 +377,7 @@ tibble(eff,effSE)%>%
   )%>%
   arrange(eff)%>%
   mutate(rownum=1:n())%>%
-  ggplot(aes(rownum,eff,ymin=eff-2*effSE,ymax=eff+2*effSE,color=Year))+
+  ggplot(aes(rownum,eff,ymin=eff-effSE,ymax=eff+effSE,color=Year))+
   geom_point()+
   geom_errorbar(width=0)+
   geom_hline(yintercept=0)+
@@ -388,6 +389,41 @@ tibble(eff,effSE)%>%
       "Mean Effect=",round(fixef(mod1re)['everCPTRUE'],2),'(p<0.001)\n',
       "SD=",round(sdEff,2),' (p=',signif(reTest[['Pr(>Chisq)']][2],1),')'))
 ggsave('plots/EffectByClassroom.pdf')
+
+
+######## try to explain heterogeneity
+cpDat1 <- cpDat1%>%
+  group_by(classid2)%>%
+    mutate(
+      meanCP=mean(everCP,na.rm=TRUE),
+      pretestVar=var(pretest,na.rm=TRUE)
+      )%>%
+      ungroup()
+re1$classid2$se <- sqrt(apply(attr(re1$classid2,'postVar'),3,function(x) x[2,2]))
+
+cpDat1$reTrt <- re1$classid2$everCPTRUE[cpDat1$classid2]
+cpDat1$reTrtSE <- re1$classid2$se[cpDat1$classid2]
+
+### just to look
+cpDat1%>%
+  group_by(classid2)%>%
+  summarize_at(vars(reTrt,meanCP,pretestVar,reTrtSE),mean)%>%
+  rename(`Prop. Ever Reassigned`=meanCP,`Pretest Variance`=pretestVar)%>%
+  select(-classid2)%>%
+  na.omit()%>%
+  pivot_longer(-starts_with('reTrt'),names_to="what",values_to='x')%>%
+  ggplot(aes(x,reTrt,ymin=reTrt-reTrtSE,ymax=reTrt+reTrtSE))+
+  geom_point()+geom_errorbar()+geom_smooth(method='lm')+facet_wrap(~what,scale="free_x")+
+  ylab('Classroom Random Slope (SE)')+xlab(NULL)
+ggsave('plots/heterogeneityRegression.pdf',height=3, width=6)  
+
+hetModcond <- update(mod1re,.~.+(meanCP+pretestVar)*everCP,data=cpDat1)
+save(hetModcond,file='artifacts/hetModCond.RData')
+sdEff2 <- sqrt(VarCorr(hetModcond)$classid2[2,2])
+nn <- rownames(summary(hetModcond)$coef)
+classHet <- summary(hetModcond)$coef[startsWith(nn,'everCPTRUE'),]
+
+ciHet <- confint(hetModcond,rownames(classHet),method='Wald')
 
 
 #####################
@@ -489,4 +525,4 @@ fullCpDat <- bind_rows(cpDat2,cpDat1)
 (mod3.2t <- update(mod2t,subset=year==2))
 
 
-save(dataInfo,eff,effSE,mod0,mod1,mod2,mod3.1,mod3.2,mod4,sens,mod1c,mod2c,mod1t,mod2t,studOverall,psmodSumm, match4,studOverall,studCovs,balClass,sdEff,sdEffp,sdSlope,sdSlopep,psmod2coef,propExcluded1,propExcluded11,propExcluded10,nIncluded1,printci,beta1.0,propExcluded11, propExcluded10, propExcluded1, nIncluded11, nIncluded10,covsbal,file='artifacts/dataAnalysis.RData')
+save(dataInfo,eff,effSE,mod0,mod1,mod2,mod3.1,mod3.2,mod4,sens,mod1c,mod2c,mod1t,mod2t,studOverall,psmodSumm, match4,studOverall,studCovs,balClass,sdEff,sdEffp,sdSlope,sdSlopep,psmod2coef,propExcluded1,propExcluded11,propExcluded10,nIncluded1,printci,beta1.0,propExcluded11, propExcluded10, propExcluded1, nIncluded11, nIncluded10,covsbal,sdEff2,classHet,ciHet,file='artifacts/dataAnalysis.RData')

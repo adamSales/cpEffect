@@ -107,11 +107,11 @@ load('artifacts/dataAnalysis.RData')
 % without further effort on your part as the last section in
 % the body of your article BEFORE References or any Appendices.
 
-%\numberofauthors{2} %  in this sample file, there are a *total*
+\numberofauthors{2} %  in this sample file, there are a *total*
 % of EIGHT authors. SIX appear on the 'first-page' (for formatting
 % reasons) and the remaining two appear in the \additionalauthors section.
 %
-%\author{
+\author{
 % You can go ahead and credit any number of authors here,
 % e.g. one 'row of three' or two rows (consisting of one row of three
 % and a second row of one, two or three).
@@ -123,18 +123,18 @@ load('artifacts/dataAnalysis.RData')
 % e-mail address with \email.
 %
 % 1st. author
-% \alignauthor
-% Adam C Sales\\
-%        \affaddr{University of Texas College of Education}\\
-%        \affaddr{Austin, TX, USA}\\
-%        \email{asales@utexas.edu}
-% % 2nd. author
-% \alignauthor
-% John F Pane\\
-%        \affaddr{RAND Corporation}\\
-%        \affaddr{Pittsburgh, PA, USA}\\
-%        \email{jpane@rand.org}
-% }
+\alignauthor
+Adam C Sales\\
+       \affaddr{University of Texas College of Education}\\
+       \affaddr{Austin, TX, USA}\\
+       \email{asales@utexas.edu}
+% 2nd. author
+\alignauthor
+John F Pane\\
+       \affaddr{RAND Corporation}\\
+       \affaddr{Pittsburgh, PA, USA}\\
+       \email{jpane@rand.org}
+}
 % Just remember to make sure that the TOTAL number of authors
 % is the number that will appear on the first page PLUS the
 % number that will appear in the \additionalauthors section.
@@ -433,17 +433,13 @@ The second condition for propensity score matching is that there are no unmeasur
 \begin{equation}\label{eq:ignore1}
 (y^1,y^0)\independent Z|\bm{x},Class
 \end{equation}
-% for the student-level analysis and
-% \begin{equation*}
-% (y^1,y^0)\independent \bar{Z}|\bm{\bar{x}}
-% \end{equation*}
-% for the classroom-level analysis.
+
 Assumption \eqref{eq:ignore1} is well known as the Achilles heel of causal inference outside of RCTs.
 \eqref{eq:ignore1} is untestable; its believability depends on what is understood about the process that underlies treatment assignment $Z$, and what covariates are available for control.
 In our case, reassignment is poorly understood, and appears highly idiosyncratic \cite{descriptivePaper}.
 Fortunately, our study includes a pretest measure, and observational studies controlling for pretest scores tend to perform well, and replicate experimental estimates \cite{cook2008three} \cite{cook2009bias}.
 Section \ref{sec:sensitivity} discusses a sensitivity analysis that
-relaxes \label{eq:ignore1} and assumes reasonable levels of unmeasured
+relaxes \ref{eq:ignore1} and assumes reasonable levels of unmeasured
 confounding.
 
 Our attitude towards propensity score matching is agnostic.
@@ -501,16 +497,54 @@ We fit the model using the \texttt{lme4} package in \texttt{R}
 All in all, the propensity score model was:
 \begin{equation}\label{eq:propmod1}
 \begin{split}
-Pr(&Z_i=1|\bm{x}_i,Class_i=j)=\\
-&logit^{-1}( \beta_{0state[i]}+beta_{1j[i]} \tilde{w}_i+\beta_2 \bar{w}_{j[i]}+\\
+log&it\left\{Pr(Z_i=1|\bm{x}_i,Class_i=j)\right\}=\\
+& \beta_{0state[i]}+\beta_{1} \tilde{w}_i+\beta_2 \bar{w}_{j[i]}+\\
 &\beta_3 Black_i+\beta_4 Latinx_i+\beta_5 Male_i+\\
 &\beta_6 Freshman_i+\beta_7 SpEd_i+\beta_8 gifted_i+\\
-&\beta_9 ESL_i+\beta_{10} FRL_i+\beta_{11} FRLmis_i+\\
-&\beta_{12}year_i+\epsilon^{Cls}_{j[i]}+\epsilon^{Teach}_{k[i]}+\epsilon^{Schl}_{l[i]})
+&\beta_9 ESL_i+\beta_{10} FRL_i+\beta_{11}
+FRLmis_i+\beta_{12}year_i+\\
+&\gamma_{j[i]}\tilde{w}_i+\epsilon^{Cls}_{j[i]}+\epsilon^{Teach}_{k[i]}+\epsilon^{Schl}_{l[i]}
 \end{split}
 \end{equation}
-where $logit^{-1}(x)=e^x/(1+e^x)$ is the inverse logit function, $\beta_{0state[i]}$ is a (fixed) intercept for each state in the sample, $\beta_{1j[i]}$ is a random slope for $\tilde{w}_i$, varying by classroom $j$, $FRLmis_i$ is an indicator for missing data in $FRL$ (which was mode-imputed), $year_i=1,2$ is the study year for subject $i$, $\epsilon^{Cls}_{j[i]}$, $\epsilon^{Teach}_{k[i]}$, and $\epsilon^{Schl}_{l[i]}$ are random intercepts for classroom $j$, teacher $k$, and school $l$.
-The random intercepts were all modeled as normal with a mean of zero and a standard deviation estimated from the data. The random slope $\beta_{1j[i]}$ was modeled as normal with a mean and standard deviation estimated from the data. $\beta{1j}$ and $\epsilon^{Cls}_j$ were allowed to correlate, while other random effects were modeled as independent.
+where $logit(x)=log(x/(1-x))$ is the logit function,
+$\beta_{0state[i]}$ is a (fixed) intercept for each state in the
+sample, $FRLmis_i$ is an indicator for missing data in $FRL$ (which
+was mode-imputed), and $year_i=1,2$ is the study year for subject $i$.
+
+Finally, $\gamma_{j[i]}$, $\epsilon^{Cls}_{j[i]}$,
+$\epsilon^{Teach}_{k[i]}$, and $\epsilon^{Schl}_{l[i]}$ are random
+effects.
+The subscripts $j$, $k$ and $l$ refer to classroom, teacher, and
+school, respectively; the $[i]$ refers to student, so that $j[i]$ is
+$i$'s classroom, $k[i]$ is $i$'s teacher, and $l[i]$ is $i$'s school.
+
+$\gamma_{j[i]}$ is a random slope for $\tilde{w}_i$, varying at the
+classroom level.
+This is essentially an interaction term, allowing the slope for
+(classroom centered) pretest scores to vary from one classroom to the
+next.
+However, unlike standard regression interactions, random slopes are
+modeled as being drawn from a normal distribution, with a standard
+deviation estimated from the data.
+This is a form of regularization, shrinking the classroom-level slopes
+towards a common value, and allowing stable estimation even with very
+few observations from each classroom \cite{gelmanHill}
+\cite{partialPoolingEDM}.
+The set of random slopes $\gamma_j$ has a mean of zero---the
+average slope across classrooms is the fixed intercept $\beta_1$.
+Therefore, the slope for pretest in classroom $j$ is
+$\beta_1+\gamma_j$.
+
+$\epsilon^{Cls}_{j}$, $\epsilon^{Teach}_{k}$, and $\epsilon^{Schl}_{l}$
+  are random intercepts for classroom, teacher, and school.
+These were also modeled as normal with a mean of zero and a standard
+deviation estimated from the data.
+Including them in the regression accounts the fact
+that two students in the same classroom or with the same teacher or in
+the same school may be more likely to have the same $Z$---either both
+be reassigned or neither---than two students in different classrooms,
+with different teachers, or in different schools.
+
 
 \begin{figure}
 <<coefplot1,out.width="95%">>=
@@ -1000,17 +1034,24 @@ The model had the same fixed effects as model underlying the
 ``Match+Regression'' results described above, as well as random
 intercepts for classroom and random slopes for reassignment, varying
 by classroom.
-That is, it models the effect of reassignment for a student in a
-particular classroom as normally distributed with a mean and a
-variance estimated from the data.
-While estimating the effect of reassignment in any particular
-classroom is beyond the scope of our data, this model allows us to estimate the variance
-across those effects.
+Formally, the model is:
+\begin{equation}\label{eq:heteroReg}
+\begin{split}
+y_i&=\beta_{0,m[i]}+\beta_1Z_i+\\
+&\beta_2SpEd_i+\beta_3frlMIS_i+\beta_4Black_i+\beta_5Hisp_i+\\
+&ns^5(pretest_i,\bm{\alpha})+\gamma_{j[i]}Z_i+\epsilon^{Cls}_{j[i]}+\epsilon^{Ind}_i
+\end{split}
+\end{equation}
+where $\beta_{0,m[i]}$ is a fixed intercept for each match, $ns^5(pretest_i,\bm{\alpha})$ is a natural spline for pretest, with five degrees of freedom and coefficient vector $\alpha$, and $\gamma_{j[i]}$, $\epsilon^{Cls}_{j[i]}$, and $\epsilon^{Ind}_i$ are random effects, modeled as normal with mean zero and standard deviation estimated from the data.
+Symbols $\alpha$, $\beta$, $\gamma$, and $\epsilon$ do not represent the same quantities as in equation \eqref{eq:propmod1}. 
+$\gamma_{j[i]}$ is the random slope for reassignment, varying by classroom; the effect of reassignment in classroom $j$ is estimated as $\hat{\beta}_1+\hat{\gamma}_j$.
+That is, $\beta_1$ represents the effect of reassignment, averaged over all classrooms, and $\gamma_j$ represents the difference between classroom $j$'s effect and the average. 
+While precisely estimating the effect of reassignment in any particular
+classroom is beyond the scope of our data, this model allows us to estimate the variance across those effects, as the variance of $\gamma_j$s.
 
 \begin{figure}
 \includegraphics[width=\linewidth]{plots/EffectByClassroom.pdf}
-\caption{Classroom-specific effects of reassignment from the
-  multilevel model described in Section \ref{sec:heterogeneity}.}
+\caption{Classroom-specific effects of reassignment ($\hat{\beta}_1+\hat{\gamma}_j$) from model \eqref{eq:heteroReg}. Error bars represent standard errors.}
 \label{fig:trtHet}
 \end{figure}
 
@@ -1031,13 +1072,42 @@ conditional variance of random slopes, combined with the standard
 error of the main effect of reassignment) are all rather wide and
 nearly all contain zero.
 
-Therefore, while the effect of reassignment was negative in most classrooms, it may
-have been positive in some.
-This variation could be due to a number of factors, including
-differences in the composition of classrooms, but supports the
-hypothesis that differences in when and how reassignment is used
-lead to differences in its effect.
+Therefore, while the effect of reassignment was negative, on average, it may
+have been positive in some classrooms.
 
+\begin{figure*}
+\centering
+\includegraphics{plots/heterogeneityRegression.pdf}
+\caption{The random effects $\gamma_j$ from model \eqref{eq:heteroReg} (with error bars for one standard error) as a function of classroom-level variance in pretest scores and the proportion of students in a classroom who were ever reassigned. OLS fits are added for interpretation.}
+\label{fig:hetRegs}
+\end{figure*}
+
+
+This variation could be due to a number of factors, including
+differences in the composition of classroomsand in when and how reassignment is used.
+We considered two simple hypotheses about classroom-level predictors of heterogeneous treatment effects.
+The first hypothesis was that variance in students' pretest scores within a classroom predicts the effect of reassignment in that classroom.
+The idea is that some teachers may use reassignment as a tool to address varying student ability---for instance, they may reassign lagging students to help them keep up with their classmates.
+Classrooms with higher variance in pretest scores afford more opportunities for teachers to use this reassignment strategy. 
+If the strategy is widely used, and either particularly effective or ineffective at boosting students' posttest scores, there will be a correlation between classroom-level variance in pretest scores and the effect of reassignment. 
+
+Our second hypothesis was that the proportion of students in a classroom who have been reassigned may predict classroom-level effects.
+The idea here is that in classrooms with low a low proportion of students reassigned, teachers use reassignment in a more targeted fashion, so it may be more beneficial. 
+
+Figure \ref{fig:hetRegs} plots random effects $\hat{\gamma}_j$ from model \eqref{eq:heteroReg} as a function of classroom level pretest variance and the proportion of students reassigned, respectively, with simple OLS fits. 
+A positive relationship between pretest variance and $\hat{\gamma}$, and a negative relationship between proportion reassigned and $\hat{\gamma}$ are apparent, but with wide standard errors.
+To test these hypotheses more formally, we re-fit model \eqref{eq:heteroReg}, adding fixed effects for the variance in pretest scores and proportion reassigned, as main effects and interacted with $Z_i$.
+The model reduced the unexplained variance in classroom-level effects from \Sexpr{round(sdEff,2)} to \Sexpr{round(sdEff2,2)}---these variables explained about \Sexpr{round((1-sdEff2^2/sdEff^2)*100)}\% of the unexplained variance in treatment effects.
+The coefficient on the interaction beween pretest variance and reassignment---measuring the extent to which pretest variance explains treatment effects---was estimated as \Sexpr{round(classHet['everCPTRUE:pretestVar','Estimate'],2)}, with a 95\% confidence interval of [\Sexpr{paste(round(ciHet['everCPTRUE:pretestVar',],2),collapse=',')}], so the data are compatible with large associations in either direction between pretest variance and treatment effects.
+No firm conclusions may be drawn.
+The coefficient on the interaction beween proportion reassigned and reassignment---measuring the extent to which classroom proportion reassigned explains treatment effects---was estimated as \Sexpr{round(classHet['everCPTRUE:meanCP','Estimate'],2)}, with a 95\% confidence interval of [\Sexpr{paste(round(ciHet['everCPTRUE:meanCP',],2),collapse=',')}], and a p-value of $p=\Sexpr{round(classHet['everCPTRUE:meanCP','Pr(>|t|)'],2)}$.
+This suggests that the effect of reassignment may be lower---more negative---in classrooms in which a higher proportion of students were reassigned.
+This aligns with our second hypothesis.
+
+These effect heterogeneity analyses assume \eqref{eq:ignore1}, no unmeasured confounding. 
+Unfortunately, we are not aware of methods for sensitivity analysis of the type presented in Section \ref{sec:sensitivity}, applied towards estimates of effect heterogeneity. 
+In particular, unobserved confounding may vary by classroom; for instance, the structure of the propensity score match may vary with the proportion of students ever reassigned, since within-classroom matches will be scarce when this proportion is high.
+For those reasons, the conclusions in this section should be taken as suggestive and exploratory. 
 
 \section{Discussion}\label{sec:discussion}
 A deeper understanding of the use of reassignment and its effects can
@@ -1081,13 +1151,9 @@ but difficult.
 <<include=FALSE,cache=FALSE>>=
 detach(dataInfo)
 @
-% \section{Acknowledgments}
-% This section is optional; it is a location for you
-% to acknowledge grants, funding, editing assistance and
-% what have you.  In the present case, for example, the
-% authors would like to thank Gerald Murray of ACM for
-% his help in codifying this \textit{Author's Guide}
-% and the \textbf{.cls} and \textbf{.tex} files that it describes.
+
+\section{Acknowledgments}
+This work was partially funded by NSF grant \#DRL-1420374.
 
 %
 % The following two commands are all you need in the
