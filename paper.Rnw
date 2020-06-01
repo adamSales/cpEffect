@@ -145,7 +145,7 @@ The design of the Cognitive Tutor Algebra I (CTA1) intelligent
 tutoring system assumes that students work through sections of
 material following a pre-specified order, and only move on from one
 section to the next after mastering the first section’s
-skills. However, the software gives teachers the ability to override
+skills. However, the software gives teachers the flexibility to override
 that structure, by reassigning students to different sections of the
 curriculum. Which students get reassigned? Does reassignment hurt
 student learning? Does it help? This paper used data from the
@@ -155,7 +155,7 @@ I posttest. Since reassignment is not randomized, we used a multilevel
 propensity score matching design, along with assessments of
 sensitivity to bias from unmeasured confounding, to estimate the
 effects of reassignment. We found that reassignment reduces posttest
-scores by roughly 0.2 standard deviations—about the same as the overall CTA1 treatment effect—that unmeasured confounding is unlikely to completely explain this observed effect, but that the effect of reassignment may vary widely between classrooms.
+scores by roughly 0.2 standard deviations—--about the same as the overall CTA1 treatment effect---that unmeasured confounding is unlikely to completely explain this observed effect, and that the effect of reassignment may vary widely between classrooms.
 \end{abstract}
 
 %% A category with the (minimum) three required fields
@@ -175,7 +175,7 @@ prerequisites---for instance, students must master arithmetic in order
 to learn how to solve algebraic equations.
 A related example is scaffolding, in which
 learners gradually achieve independence over a sequence of problems;
-scaffolding ``consists essentially of the adult 'controling' those
+scaffolding ``consists essentially of the adult `controling' those
 elements of the task that are initially beyond the learner's capacity,
 thus permitting him to concentrate upon and complete only those
 elements that are within his range of competence''
@@ -251,7 +251,7 @@ the effect of reassignment, and, by extension, the (joint)  importance
 of topic sequencing and mastery learning.
 
 The following section gives background on the effectiveness trial
-and describe the data we will use for the study.
+and describes the data we will use for the study.
 Section \ref{sec:psm} describes propensity score matching, the
 method we employ. Section \ref{sec:propensityScores} describes the
 propensity score models, which in turn describe characteristics of
@@ -334,8 +334,8 @@ used the tutor but their log data was irretrievable or could not be
 reliably linked to posttest scores and covariates.
 This study omitted schools in which data was missing for over 20\% of
 students in either year, leaving \Sexpr{pn(nschool)} schools.
-Among the students at these schools, we omitted 164 had no log data, and 242
-either only worked---but did not complete---one section or had no
+Among the students at these schools, we omitted 164 who had no log data, and 242
+who worked---but did not complete---only one section or who had no
 section completion data for some other reason.
 A total of \Sexpr{pn(nstud)} students in \Sexpr{pn(nclass)} classrooms
 remained in the analysis sample, roughly \Sexpr{percentKept}\% of the
@@ -956,7 +956,7 @@ inference in Section \ref{sec:effects}.
 For instance, the estimated negative effect may be due to baseline differences
 in ability, beyond what is captured in pretest scores.
 
-\citeN{hhh} suggest a method of estimating the sensitivity of a
+\cite{hhh} suggest a method of estimating the sensitivity of a
 regression to an omitted confounder based on benchmarking from
 observed confounders.
 Roughly speaking, the idea is to widen the confidence interval from an
@@ -965,7 +965,7 @@ hypothetical unmeasured confounder, $U$, that predicts reassignment and posttest
 These ``sensitivity intervals'' account for uncertainty from two sources: random error, and systematic error due to the omission of a confounder.
 
 In order to confound the causal relationship between reassignment and posttests, a confounder would have to predict both.
-Capturing these two requirements, the method of \citeN{hhh}
+Capturing these two requirements, the method of \cite{hhh}
 is based on two sensitivity parameters: first, $T_Z$ encodes the
 extent to which $U$ predicts $Z$, after accounting for observed
 covariates $\bm{x}$.
@@ -974,7 +974,7 @@ regression of $Z$ on $U$ and $\bm{X}$.
 The second parameter is $\rho^2$, the squared partial correlation
 between posttest scores and $U$, conditional on $\bm{x}$.
 Of course, since $U$ is unobserved, neither $T_Z$ nor $\rho^2$ is
-known; \citeN{hhh} suggest benchmarking them using observed
+known; \cite{hhh} suggest benchmarking them using observed
 covariates.
 That is, imagine each observed covariate, in turn, were unobserved,
 and calculate its $T_Z$ and $\rho^2$ given the rest of the observed
@@ -1037,15 +1037,15 @@ by classroom.
 Formally, the model is:
 \begin{equation}\label{eq:heteroReg}
 \begin{split}
-y_i&=\beta_{0,m[i]}+\beta_1Z_i+\\
-&\beta_2SpEd_i+\beta_3frlMIS_i+\beta_4Black_i+\beta_5Hisp_i+\\
+Post&test_i=\beta_{0,m[i]}+\beta_1Z_i+\beta_2SpEd_i+\\
+&\beta_3frlMIS_i+\beta_4Black_i+\beta_5Hisp_i+\\
 &ns^5(pretest_i,\bm{\alpha})+\gamma_{j[i]}Z_i+\epsilon^{Cls}_{j[i]}+\epsilon^{Ind}_i
 \end{split}
 \end{equation}
 where $\beta_{0,m[i]}$ is a fixed intercept for each match, $ns^5(pretest_i,\bm{\alpha})$ is a natural spline for pretest, with five degrees of freedom and coefficient vector $\alpha$, and $\gamma_{j[i]}$, $\epsilon^{Cls}_{j[i]}$, and $\epsilon^{Ind}_i$ are random effects, modeled as normal with mean zero and standard deviation estimated from the data.
-Symbols $\alpha$, $\beta$, $\gamma$, and $\epsilon$ do not represent the same quantities as in equation \eqref{eq:propmod1}. 
+Symbols $\alpha$, $\beta$, $\gamma$, and $\epsilon$ do not represent the same quantities as in equation \eqref{eq:propmod1}.
 $\gamma_{j[i]}$ is the random slope for reassignment, varying by classroom; the effect of reassignment in classroom $j$ is estimated as $\hat{\beta}_1+\hat{\gamma}_j$.
-That is, $\beta_1$ represents the effect of reassignment, averaged over all classrooms, and $\gamma_j$ represents the difference between classroom $j$'s effect and the average. 
+That is, $\beta_1$ represents the effect of reassignment, averaged over all classrooms, and $\gamma_j$ represents the difference between classroom $j$'s effect and the average.
 While precisely estimating the effect of reassignment in any particular
 classroom is beyond the scope of our data, this model allows us to estimate the variance across those effects, as the variance of $\gamma_j$s.
 
@@ -1084,17 +1084,17 @@ have been positive in some classrooms.
 
 
 This variation could be due to a number of factors, including
-differences in the composition of classroomsand in when and how reassignment is used.
+differences in the composition of classrooms and in when or how reassignment is used.
 We considered two simple hypotheses about classroom-level predictors of heterogeneous treatment effects.
 The first hypothesis was that variance in students' pretest scores within a classroom predicts the effect of reassignment in that classroom.
 The idea is that some teachers may use reassignment as a tool to address varying student ability---for instance, they may reassign lagging students to help them keep up with their classmates.
-Classrooms with higher variance in pretest scores afford more opportunities for teachers to use this reassignment strategy. 
-If the strategy is widely used, and either particularly effective or ineffective at boosting students' posttest scores, there will be a correlation between classroom-level variance in pretest scores and the effect of reassignment. 
+Classrooms with higher variance in pretest scores afford more opportunities for teachers to use this reassignment strategy.
+If the strategy is widely used, and either particularly effective or ineffective at boosting students' posttest scores, there will be a correlation between classroom-level variance in pretest scores and the effect of reassignment.
 
 Our second hypothesis was that the proportion of students in a classroom who have been reassigned may predict classroom-level effects.
-The idea here is that in classrooms with low a low proportion of students reassigned, teachers use reassignment in a more targeted fashion, so it may be more beneficial. 
+The idea here is that in classrooms with a low proportion of students reassigned, teachers use reassignment in a more targeted fashion, so it may be more beneficial.
 
-Figure \ref{fig:hetRegs} plots random effects $\hat{\gamma}_j$ from model \eqref{eq:heteroReg} as a function of classroom level pretest variance and the proportion of students reassigned, respectively, with simple OLS fits. 
+Figure \ref{fig:hetRegs} plots random effects $\hat{\gamma}_j$ from model \eqref{eq:heteroReg} as a function of classroom level pretest variance and the proportion of students reassigned, respectively, with simple OLS fits.
 A positive relationship between pretest variance and $\hat{\gamma}$, and a negative relationship between proportion reassigned and $\hat{\gamma}$ are apparent, but with wide standard errors.
 To test these hypotheses more formally, we re-fit model \eqref{eq:heteroReg}, adding fixed effects for the variance in pretest scores and proportion reassigned, as main effects and interacted with $Z_i$.
 The model reduced the unexplained variance in classroom-level effects from \Sexpr{round(sdEff,2)} to \Sexpr{round(sdEff2,2)}---these variables explained about \Sexpr{round((1-sdEff2^2/sdEff^2)*100)}\% of the unexplained variance in treatment effects.
@@ -1104,10 +1104,10 @@ The coefficient on the interaction beween proportion reassigned and reassignment
 This suggests that the effect of reassignment may be lower---more negative---in classrooms in which a higher proportion of students were reassigned.
 This aligns with our second hypothesis.
 
-These effect heterogeneity analyses assume \eqref{eq:ignore1}, no unmeasured confounding. 
-Unfortunately, we are not aware of methods for sensitivity analysis of the type presented in Section \ref{sec:sensitivity}, applied towards estimates of effect heterogeneity. 
+These effect heterogeneity analyses assume \eqref{eq:ignore1}, no unmeasured confounding.
+Unfortunately, we are not aware of methods for sensitivity analysis of the type presented in Section \ref{sec:sensitivity}, applied towards estimates of effect heterogeneity.
 In particular, unobserved confounding may vary by classroom; for instance, the structure of the propensity score match may vary with the proportion of students ever reassigned, since within-classroom matches will be scarce when this proportion is high.
-For those reasons, the conclusions in this section should be taken as suggestive and exploratory. 
+For those reasons, the conclusions in this section should be taken as suggestive and exploratory.
 
 \section{Discussion}\label{sec:discussion}
 A deeper understanding of the use of reassignment and its effects can
