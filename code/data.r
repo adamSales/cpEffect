@@ -1,4 +1,5 @@
-pload('data/cpPaper.RData')
+library(tidyverse)
+load('data/cpPaper.RData')
 
 cpDat <- data%>%filter(!is.na(status)& status!='final_or_incomplete')%>%
   select(field_id,year,state,section,unit,race,sex,grade,spec_speced,xirt,
@@ -28,13 +29,14 @@ cpDat$ncpCat <- factor(ifelse(cpDat$ncp>=4,'4+',cpDat$ncp))
 cpDat$everCP <- cpDat$ncp>0
 
 cpDat <- cpDat%>%
+  filter(!is.na(pretestC))%>%
   group_by(classid2)%>%
   mutate(pcp=mean(everCP,na.rm=TRUE),nstud=n())%>%
   ungroup()
 
-cpDat1 <- filter(cpDat,pcp<1,pcp>0,!is.na(pretestC)) ### only estimate for ppl in classrooms w some but not all CP and with
+cpDat1 <- filter(cpDat,pcp<1,pcp>0) ### only estimate for ppl in classrooms w some but not all CP and with
 
-cpDat2 <- filter(cpDat,pcp==1|pcp==0,!is.na(pretestC))%>% ### only estimate for ppl in classrooms w some but not all CP and with observed pretest
+cpDat2 <- filter(cpDat,pcp==1|pcp==0)%>% ### only estimate for ppl in classrooms w some but not all CP and with observed pretest
   mutate(classid=as.numeric(classid2))%>%
   group_by(classid2)%>%
   mutate(nstud=n())%>%
