@@ -472,12 +472,13 @@ balance.
 Only then do posttests enter the picture, so that we may estimate
 effects.
 
+\sloppy
 All data analysis was done in \texttt{R} \cite{rcite} using the
 \texttt{tidyverse} suite of packages \cite{tidyverse} for data
 manipulation, plotting, and other tasks.
 This document was produced dynamically with \texttt{knitr}
 \cite{knitr}.
-Source code is available at www.github.com/[Redacted].
+Source code is available at www.github.com/adamSales/cpEffect.
 
 \section{Propensity Scores: Who Gets Reassigned?}\label{sec:propensityScores}
 We use multilevel logistic regression \cite{gelmanHill} to estimate student level propensity scores.
